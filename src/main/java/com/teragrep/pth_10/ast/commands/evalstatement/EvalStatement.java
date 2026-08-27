@@ -2364,7 +2364,8 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
         // Register and call UDF mvappend
         UserDefinedFunction mvAppendUDF = functions
-                .udf(new Mvappend(), DataTypes.createArrayType(DataTypes.StringType, false)).asNonNullable();
+                .udf(new Mvappend(), DataTypes.createArrayType(DataTypes.StringType, false))
+                .asNonNullable();
         SparkSession ss = SparkSession.builder().getOrCreate();
         ss.udf().register("mvAppendUDF", mvAppendUDF);
 

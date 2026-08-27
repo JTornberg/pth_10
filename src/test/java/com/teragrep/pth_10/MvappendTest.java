@@ -81,10 +81,6 @@ public class MvappendTest {
         final String q = "| makeresults | eval a=mvappend(\"Bob\", \"World\")";
 
         this.streamingTestUtil.performDPLTest(q, "", res -> {
-            System.out.println("- query: " + q);
-            res.printSchema();
-            res.show(false);
-
             final List<Row> rows = res.collectAsList();
             Assertions.assertEquals(1, rows.size());
 
@@ -103,10 +99,6 @@ public class MvappendTest {
                 + "| eval berries=mvappend(\"blueberry\", \"strawberry\") | eval all=mvappend(fruits, berries)";
 
         this.streamingTestUtil.performDPLTest(q, "", res -> {
-            System.out.println("- query: " + q);
-            res.printSchema();
-            res.show(false);
-
             final List<Row> rows = res.collectAsList();
             Assertions.assertEquals(1, rows.size());
 
@@ -126,10 +118,6 @@ public class MvappendTest {
                 + "| eval berries=mvappend(\"blueberry\", \"lingonberry\") | eval all=mvappend(fruits, berries) | eval c=mvcount(all)";
 
         this.streamingTestUtil.performDPLTest(q, "", res -> {
-            System.out.println("- query: " + q);
-            res.printSchema();
-            res.show(false);
-
             final List<Row> rows = res.collectAsList();
             Assertions.assertEquals(1, rows.size());
 
@@ -145,11 +133,7 @@ public class MvappendTest {
     )
     public void nullArgumentIsDropped() {
         final String q = "| makeresults | eval a=mvappend(\"mango\", null())";
-
         this.streamingTestUtil.performDPLTest(q, "", res -> {
-            System.out.println("- query: " + q);
-            res.printSchema();
-            res.show(false);
 
             final List<Row> rows = res.collectAsList();
             Assertions.assertEquals(1, rows.size());
