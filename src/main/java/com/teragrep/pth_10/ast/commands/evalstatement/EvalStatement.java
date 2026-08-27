@@ -2362,7 +2362,15 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
                 listOfFields.add(field);
         }
 
-        Column res = functions.array(JavaConversions.asScalaBuffer(listOfFields));
+        // Register and call UDF mvappend
+        UserDefinedFunction mvAppendUDF = functions
+                .udf(new Mvappend(), DataTypes.createArrayType(DataTypes.StringType, false)).asNonNullable();
+        SparkSession ss = SparkSession.builder().getOrCreate();
+        ss.udf().register("mvAppendUDF", mvAppendUDF);
+
+        Column res = functions.callUDF("mvAppendUDF", functions.struct(JavaConversions.asScalaBuffer(listOfFields)));
+
+        //Column res = functions.array(JavaConversions.asScalaBuffer(listOfFields));
 
         rv = new ColumnNode(res);
         return rv;
