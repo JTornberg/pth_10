@@ -46,14 +46,17 @@
 package com.teragrep.pth_10;
 
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
+import java.util.Arrays;
 import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MvappendTest {
-
+    private final String testFile = "src/test/resources/mvappendTest_data*.jsonl";
     private StreamingTestUtil streamingTestUtil;
 
     @BeforeAll
@@ -78,9 +81,9 @@ public class MvappendTest {
             matches = "true"
     )
     public void stringAppendInOrder() {
-        final String q = "| makeresults | eval a=mvappend(\"Bob\", \"World\")";
+        final String q = "index=index_A | eval a=mvappend(\"Bob\", \"World\")";
 
-        this.streamingTestUtil.performDPLTest(q, "", res -> {
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
             final List<Row> rows = res.collectAsList();
             Assertions.assertEquals(1, rows.size());
 
@@ -95,10 +98,10 @@ public class MvappendTest {
             matches = "true"
     )
     public void twoMultivalueColumns() {
-        final String q = "| makeresults | eval fruits=mvappend(\"mango\", \"apple\") "
+        final String q = "index=index_A | eval fruits=mvappend(\"mango\", \"apple\") "
                 + "| eval berries=mvappend(\"blueberry\", \"strawberry\") | eval all=mvappend(fruits, berries)";
 
-        this.streamingTestUtil.performDPLTest(q, "", res -> {
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
             final List<Row> rows = res.collectAsList();
             Assertions.assertEquals(1, rows.size());
 
@@ -114,10 +117,10 @@ public class MvappendTest {
             matches = "true"
     )
     public void mvcountOverAppendedValues() {
-        final String q = "| makeresults | eval fruits=mvappend(\"apple\", \"banana\") "
+        final String q = "index=index_A | eval fruits=mvappend(\"apple\", \"banana\") "
                 + "| eval berries=mvappend(\"blueberry\", \"lingonberry\") | eval all=mvappend(fruits, berries) | eval c=mvcount(all)";
 
-        this.streamingTestUtil.performDPLTest(q, "", res -> {
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
             final List<Row> rows = res.collectAsList();
             Assertions.assertEquals(1, rows.size());
 
@@ -132,8 +135,8 @@ public class MvappendTest {
             matches = "true"
     )
     public void nullArgumentIsDropped() {
-        final String q = "| makeresults | eval a=mvappend(\"mango\", null())";
-        this.streamingTestUtil.performDPLTest(q, "", res -> {
+        final String q = "index=index_A | eval a=mvappend(\"mango\", null())";
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
 
             final List<Row> rows = res.collectAsList();
             Assertions.assertEquals(1, rows.size());
@@ -143,4 +146,212 @@ public class MvappendTest {
         });
     }
 
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void nestedMvappend() {
+        final String q = "index=index_A | eval a=mvappend(mvappend(\"a\", \"b\"), \"c\")";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[a, b, c]", row.getList(row.fieldIndex("a")).toString());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void numericArgumentBecomesString() {
+        final String q = "index=index_A | eval a=mvappend(1, 2)";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final StructField a = res.schema().apply("a");
+            Assertions.assertEquals(DataTypes.createArrayType(DataTypes.StringType, false), a.dataType());
+
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[1, 2]", row.getList(row.fieldIndex("a")).toString());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void singleArgument() {
+        final String q = "index=index_A | eval a=mvappend(1)";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[1]", row.getList(row.fieldIndex("a")).toString());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void nullColumnReference() {
+        final String q = "index=index_A | eval n=null() | eval a=mvappend(\"mango\", n)";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[mango]", row.getList(row.fieldIndex("a")).toString());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void allNullArgument() {
+        final String q = "index=index_A | eval a=mvappend(null(), null())";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[]", row.getList(row.fieldIndex("a")).toString());
+            Assertions.assertTrue(row.getList(row.fieldIndex("a")).isEmpty());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void multivalueFromSplit() {
+        final String q = "index=index_A | eval a=mvappend(split(\"banana;kiwi\", \";\", \"apple\")";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[banana, kiwi, apple]", row.getList(row.fieldIndex("a")).toString());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void multivalueFromMvdedup() {
+        final String q = "index=index_A | eval a=mvappend(mvdedup(mvappend((\"kiwi\", \"apple\", \"kiwi\")), \"mango\")";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[kiwi, apple, mango]", row.getList(row.fieldIndex("a")).toString());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void multivalueFromMvrange() {
+        final String q = "index=index_A | eval a=mvappend(mvrange(1, 4, 1), \"mango\")";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[1, 2, 3, mango]", row.getList(row.fieldIndex("a")).toString());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void mvJoinOverNumericValues() {
+        final String q = "index=index_A | eval a=mvjoin(mvappend(1, 2), \",\")";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("1,2", row.getString(row.fieldIndex("a")));
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void sameMvColumnTwice() {
+        final String q = "index=index_A | eval fruits=mvappend(\"apple\", \"kiwi\") | eval a=mvappend(fruits, fruits)";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[apple, kiwi, apple, kiwi]", row.getList(row.fieldIndex("a")).toString());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void multivalueBetweenSingles() {
+        final String q = "index=index_A | eval fruits=mvappend(\"apple\", \"banana\") | eval a=mvappend(\"first\", fruits, \"last\")";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals("[first, apple, banana, last]", row.getList(row.fieldIndex("a")).toString());
+        });
+    }
+
+    @Test
+    @DisabledIfSystemProperty(
+            named = "skipSparkTest",
+            matches = "true"
+    )
+    public void emptyStringIsKept() {
+        final String q = "index=index_A | eval a=mvappend(\"\", \"apple\", \"\", \"banana\", \"\")";
+
+        this.streamingTestUtil.performDPLTest(q, testFile, res -> {
+            final List<Row> rows = res.collectAsList();
+            Assertions.assertEquals(1, rows.size());
+
+            Row row = rows.get(0);
+            Assertions.assertEquals(5, row.getList(row.fieldIndex("a")).size());
+            Assertions.assertEquals(Arrays.asList("", "apple", "", "banana", ""), row.getList(row.fieldIndex("a")));
+        });
+    }
 }
