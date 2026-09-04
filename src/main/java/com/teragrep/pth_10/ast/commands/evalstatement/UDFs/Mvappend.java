@@ -52,6 +52,7 @@ import scala.collection.Seq;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,7 +65,10 @@ public class Mvappend implements UDF1<Row, List<String>>, Serializable {
 
     @Override
     public List<String> call(Row arguments) {
-        List<String> values = new ArrayList<>();
+        if (arguments == null) {
+            return Collections.emptyList();
+        }
+        final List<String> values = new ArrayList<>();
 
         for (int i = 0; i < arguments.length(); i++) {
             values.addAll(valuesOf(arguments.get(i)));
@@ -74,17 +78,20 @@ public class Mvappend implements UDF1<Row, List<String>>, Serializable {
     }
 
     private List<String> valuesOf(Object argument) {
-        List<String> values = new ArrayList<>();
+        if (argument == null) {
+            return Collections.emptyList();
+        }
 
         if (argument instanceof Seq) {
-            Iterator<?> it = ((Seq<?>) argument).iterator();
+            final List<String> values = new ArrayList<>();
+            final Iterator<?> it = ((Seq<?>) argument).iterator();
+
             while (it.hasNext()) {
                 values.addAll(valuesOf(it.next()));
             }
+
+            return values;
         }
-        else if (argument != null) {
-            values.add(argument.toString());
-        }
-        return values;
+        return Collections.singletonList(argument.toString());
     }
 }
