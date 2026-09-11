@@ -218,6 +218,7 @@ public class appendTests {
             Assertions.assertEquals("[one, 2]", values.toString());
         });
     }
+
     @Test
     @DisabledIfSystemProperty(
             named = "skipSparkTest",
