@@ -45,10 +45,7 @@
  */
 package com.teragrep.pth_10.ast.commands.evalstatement;
 
-import com.teragrep.pth_10.ast.DPLParserCatalystContext;
-import com.teragrep.pth_10.ast.QuotedText;
-import com.teragrep.pth_10.ast.TextString;
-import com.teragrep.pth_10.ast.UnquotedText;
+import com.teragrep.pth_10.ast.*;
 import com.teragrep.pth_10.ast.bo.*;
 import com.teragrep.pth_10.ast.commands.evalstatement.UDFs.*;
 import com.teragrep.pth_10.steps.eval.EvalStep;
@@ -90,7 +87,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * Initialize evalStatement
-     * 
+     *
      * @param catCtx Catalyst context object
      */
     public EvalStatement(DPLParserCatalystContext catCtx) {
@@ -152,7 +149,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * Generates a column based on a source, value and operation
-     * 
+     *
      * @param source    Left hand side
      * @param operation Operation
      * @param value     Right hand side
@@ -278,7 +275,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * substring() eval method Takes a substring out of the given string based on given indices
-     * 
+     *
      * @param ctx EvalMethodSubstrContext
      * @return column node containing substr column
      */
@@ -309,7 +306,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * true() eval method returns TRUE
-     * 
+     *
      * @param ctx EvalMethodTrueContext
      * @return column node
      */
@@ -327,7 +324,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * false() eval method returns FALSE
-     * 
+     *
      * @param ctx EvalMethodFalseContext
      * @return column node
      */
@@ -344,7 +341,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * null() eval method Returns NULL
-     * 
+     *
      * @param ctx EvalMethodNullContext
      * @return column node
      */
@@ -363,7 +360,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * nullif() eval method Returns NULL if x==y, otherwise x
-     * 
+     *
      * @param ctx EvalMethodNullifContext
      * @return column node
      */
@@ -393,7 +390,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * searchmatch(x) eval method Returns TRUE if the search string matches the event
-     * 
+     *
      * @param ctx EvalMethodSearchmatchContext
      * @return column node
      */
@@ -466,7 +463,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * now() eval method Returns the current system time
-     * 
+     *
      * @param ctx EvalMethodNowContext
      * @return column node
      */
@@ -486,7 +483,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * len() eval method Returns the length of the field contents
-     * 
+     *
      * @param ctx EvalMethodLenContext
      * @return column node
      */
@@ -504,7 +501,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * lower() eval method Returns the field contents in all lowercase characters
-     * 
+     *
      * @param ctx EvalMethodLowerContext
      * @return column node
      */
@@ -526,7 +523,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * upper() eval method Returns the field contents in all uppercase characters
-     * 
+     *
      * @param ctx EvalMethodUpperContext
      * @return ColumnNode containing column for upper() eval method
      */
@@ -549,7 +546,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
     /**
      * urldecode() eval method Returns the given URL decoded, e.g. replaces %20 etc. with appropriate human readable
      * characters
-     * 
+     *
      * @param ctx EvalMethodUrldecodeContext
      * @return column node
      */
@@ -578,7 +575,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
     /**
      * ltrim() eval method Returns the field contents with trimString trimmed from left side if given, otherwise spaces
      * and tabs
-     * 
+     *
      * @param ctx EvalMethodLtrimContext
      * @return ColumnNode containing column for trim() eval method
      */
@@ -609,7 +606,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * replace() eval method Returns a string with replaced parts as defined by the regex string
-     * 
+     *
      * @param ctx EvalMethodReplaceContext
      * @return column node
      */
@@ -644,7 +641,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
     /**
      * rtrim() eval method Returns the field contents with trimString trimmed from right side if given, otherwise spaces
      * and tabs
-     * 
+     *
      * @param ctx EvalMethodRtrimContext
      * @return ColumnNode containing column for rtrim() eval method
      */
@@ -676,7 +673,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
     /**
      * trim() eval method Returns the field contents with trimString trimmed from both sides if given, otherwise spaces
      * and tabs
-     * 
+     *
      * @param ctx EvalMethodTrimContext
      * @return ColumnNode containing Column for trim() eval method
      */
@@ -707,7 +704,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * split() eval method Returns field split with delimiter
-     * 
+     *
      * @param ctx EvalMethodSplitContext
      * @return ColumnNode containing the Column for split() eval method
      */
@@ -732,7 +729,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * relative_time() eval method Returns timestamp based on given unix epoch and relative time modifier
-     * 
+     *
      * @param ctx EvalMethodRelative_timeContext
      * @return ColumnNode containing Column for relative_time() eval method
      */
@@ -761,7 +758,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * strftime() eval method Returns a timestamp based on given unix epoch and format string
-     * 
+     *
      * @param ctx EvalMethodStrftimeContext
      * @return ColumnNode containing column for strftime() eval method
      */
@@ -819,7 +816,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * strptime() eval method Returns an unix epoch based on given timestamp and format string
-     * 
+     *
      * @param ctx EvalMethodStrptimeContext
      * @return ColumnNode containing the column for strptime() eval method
      */
@@ -871,7 +868,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * pow() eval method Returns the field to the power of n
-     * 
+     *
      * @param ctx EvalMethodPowContext
      * @return ColumnNode for pow() eval method
      */
@@ -894,7 +891,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * abs() eval method Returns absolute value
-     * 
+     *
      * @param ctx EvalMethodAbs
      * @return ColumnNode for abs() eval method
      */
@@ -917,7 +914,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * ceiling() / ceil() eval method Returns the value rounded up
-     * 
+     *
      * @param ctx EvalMethodCeiling
      * @return ColumnNode for ceiling() / ceil() eval method
      */
@@ -941,7 +938,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
     /**
      * exact() eval method Acts as a passthrough More details:
      * {@link #evalMethodExactEmitCatalyst(DPLParser.EvalMethodExactContext)}
-     * 
+     *
      * @param ctx EvalMethodExactContext
      * @return ColumnNode containg Column for exact() eval method
      */
@@ -970,7 +967,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * exp() eval method Returns e^n
-     * 
+     *
      * @param ctx EvalMethodExpContext
      * @return ColumnNode containing column for exp() eval method
      */
@@ -993,7 +990,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * floor() eval method Rounds down to nearest integer
-     * 
+     *
      * @param ctx EvalMethodFloor
      * @return ColumnNode containing column for floor() eval method
      */
@@ -1016,7 +1013,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * ln() eval method Returns the natural logarithmic of n
-     * 
+     *
      * @param ctx EvalMethodLnContext
      * @return ColumnNode containing column for ln() eval method
      */
@@ -1039,7 +1036,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * log() eval method Returns the nth logarithmic of given number
-     * 
+     *
      * @param ctx EvalMethodLogContext
      * @return ColumnNode containing the column for log() eval method
      */
@@ -1077,7 +1074,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * cos() eval method Returns the cosine of the field value
-     * 
+     *
      * @param ctx EvalMethodCosContext
      * @return ColumnNode containing the column for cos() eval method
      */
@@ -1100,7 +1097,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * cosh() eval method Returns the hyperbolic cosine of the field value
-     * 
+     *
      * @param ctx EvalMethodCoshContext
      * @return ColumnNode containing the column for the cosh() eval method
      */
@@ -1123,7 +1120,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * acos() eval method Returns arc cosine of the field value
-     * 
+     *
      * @param ctx EvalMethodAcosContext
      * @return ColumnNode containing the column for acos() eval method
      */
@@ -1146,7 +1143,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * acosh() eval method Returns the inverse hyperbolic cosine of the field value
-     * 
+     *
      * @param ctx EvalMethodAcoshContext
      * @return ColumnNode containing the column for acosh() eval method
      */
@@ -1174,7 +1171,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * sin() eval method Returns the sine of the field value
-     * 
+     *
      * @param ctx EvalMethodSinContext
      * @return ColumnNode containing the Column for sin() eval method
      */
@@ -1197,7 +1194,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * sinh() eval method Returns hyperbolic sine of the field value
-     * 
+     *
      * @param ctx EvalMethodSinhContext
      * @return ColumnNode containing the Column for the sinh() eval method
      */
@@ -1220,7 +1217,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * asin() eval method Returns arc sine of the field value
-     * 
+     *
      * @param ctx EvalMethodAsinContext
      * @return ColumnNode containing the Column for the asin() eval method
      */
@@ -1243,7 +1240,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * asinh() eval method Returns inverse hyperbolic sine of the field value
-     * 
+     *
      * @param ctx EvalMethodAsinhContext
      * @return ColumnNode containing the Column for the asinh() eval method
      */
@@ -1270,7 +1267,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * tan() eval method Returns the tangent of the field value
-     * 
+     *
      * @param ctx EvalMethodTanContext
      * @return ColumnNode containing the Column for the tan() eval method
      */
@@ -1293,7 +1290,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * tanh() eval method Returns the hyperbolic tangent of the field value
-     * 
+     *
      * @param ctx EvalMethodTanhContext
      * @return ColumnNode containing the Column for the tanh() eval method
      */
@@ -1316,7 +1313,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * atan() eval method Returns the arc tangent of the field value
-     * 
+     *
      * @param ctx EvalMethodAtanContext
      * @return ColumnNode containing the Column for the atan() eval method
      */
@@ -1339,7 +1336,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * atan2() eval method Returns the arc tangent of Y,X
-     * 
+     *
      * @param ctx EvalMethodAtan2Context
      * @return ColumnNode containg the Column for the atan2() eval method
      */
@@ -1363,7 +1360,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * atanh() eval method Returns the inverse hyperbolic tangent of the field value
-     * 
+     *
      * @param ctx EvalMethodAtanhContext
      * @return ColumnNode containing the Column for the atanh() eval method
      */
@@ -1392,7 +1389,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
     /**
      * avg() eval method Returns the average of all numerical parameters given as an integer. Ignores parameters that
      * can't be converted to a number.
-     * 
+     *
      * @param ctx EvalMethodAvgContext
      * @return ColumnNode containing the Column for the avg() eval method
      */
@@ -1418,7 +1415,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * hypot() eval method Returns the hypotenuse, when X and Y are the edges forming the 90 degree angle of a triangle
-     * 
+     *
      * @param ctx EvalMethodHypotContext
      * @return ColumnNode containing the Column for the hypot() eval method
      */
@@ -1442,7 +1439,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * pi() eval method Returns constant pi to 11 digits of precision
-     * 
+     *
      * @param ctx EvalMethodPiContext
      * @return ColumnNode containing the Column for the pi() eval method
      */
@@ -1466,7 +1463,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * min() eval method Returns the minimum of the given arguments
-     * 
+     *
      * @param ctx EvalMethodMinContext
      * @return ColumnNode containing the Column for the min() eval method
      */
@@ -1501,7 +1498,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * max() eval method Returns the maximum of the given arguments
-     * 
+     *
      * @param ctx EvalMethodMaxContext
      * @return ColumnNode containing the Column for the max() eval method
      */
@@ -1536,7 +1533,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * random() eval method Returns a pseudo-random integer from range 0 to 2^31 - 1
-     * 
+     *
      * @param ctx EvalMethodRandomContext
      * @return ColumnNode containing the Column for the random() eval method
      */
@@ -1562,7 +1559,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * sqrt() eval method Returns the square root of the field value
-     * 
+     *
      * @param ctx EvalMethodSqrtContext
      * @return ColumnNode containing the Column for the sqrt() eval method
      */
@@ -1585,7 +1582,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * sum() eval method Returns the sum of the given numerical values/fields
-     * 
+     *
      * @param ctx EvalmethodSumContext
      * @return ColumnNode containing the Column for the sum() eval method
      */
@@ -1604,7 +1601,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * round() eval method Returns x rounded to y decimal places, or integer if y missing
-     * 
+     *
      * @param ctx EvalMethodRoundContext
      * @return ColumnNode containing the Column for the round() eval method
      */
@@ -1633,7 +1630,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * sigfig() eval method Returns the field value reduced to the significant figures
-     * 
+     *
      * @param ctx EvalMethodSigfigContext
      * @return ColumnNode containing the Column for the sigfig() eval method
      */
@@ -1696,7 +1693,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * case() eval method Alternating conditions and values, returns the first value where condition is true
-     * 
+     *
      * @param ctx EvalMethodCaseContext
      * @return ColumnNode containing the Column for the case() eval method
      */
@@ -1744,7 +1741,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * validate() eval method Opposite of 'case(x,y)', returns the first y where x=false
-     * 
+     *
      * @param ctx EvalMethodValidateContext
      * @return ColumnNode containing the Column for the validate() eval method
      */
@@ -1793,7 +1790,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * cidrmatch() eval method x= cidr subnet, y= ip address to match with the subnet x
-     * 
+     *
      * @param ctx EvalMethodCidrmatchContext
      * @return ColumnNode containing the Column for the cidrmatch() eval method
      */
@@ -1818,7 +1815,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * coalesce() eval method Returns the first non-null argument
-     * 
+     *
      * @param ctx EvalMethodCoalesceContext
      * @return ColumnNode containing the Column for the coalesce() eval method
      */
@@ -1851,7 +1848,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * in() eval method Returns if the first column's value is any of the other arguments
-     * 
+     *
      * @param ctx EvalMethodInContext
      * @return ColumnNode containing the Column for the in() eval method
      */
@@ -1884,7 +1881,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
     /**
      * like() eval method Returns TRUE if field is like pattern Pattern supports wildcards % (multi char) and _ (single
      * char)
-     * 
+     *
      * @param ctx EvalMethodLikeContext
      * @return ColumnNode containing the Column for the like() eval method
      */
@@ -1908,7 +1905,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * match() eval method Returns true if regex matches the subject
-     * 
+     *
      * @param ctx EvalMethodMatchContext
      * @return ColumnNode containing the Column for the match() eval method
      */
@@ -1940,7 +1937,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * tostring() eval method Returns different types of strings based on given second argument
-     * 
+     *
      * @param ctx EvalMethodTostringContext
      * @return ColumnNode containing the Column for the tostring() eval method
      */
@@ -1999,7 +1996,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * tonumber() eval method Returns number string converted to given base, defaults to base-10
-     * 
+     *
      * @param ctx EvalMethodTonumberContext
      * @return ColumnNode containing the Column for the tonumber() eval method
      */
@@ -2034,7 +2031,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * md5() eval method Returns the md5 checksum of given field
-     * 
+     *
      * @param ctx EvalMethodMd5Context
      * @return ColumnNode containing the Column for the md5() eval method
      */
@@ -2057,7 +2054,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * sha1() eval method Returns the sha1 checksum of given field
-     * 
+     *
      * @param ctx EvalMethodSha1Context
      * @return ColumnNode containing the Column for the sha1() eval method
      */
@@ -2080,7 +2077,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * sha256() eval method Returns the sha256 checksum of given field
-     * 
+     *
      * @param ctx EvalMethodSha256Context
      * @return ColumnNode containing the Column for the sha256() eval method
      */
@@ -2103,7 +2100,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * sha512() eval method Returns the sha512 checksum of given field
-     * 
+     *
      * @param ctx EvalMethodSha512Context
      * @return ColumnNode containing the column for the sha512() eval method
      */
@@ -2126,7 +2123,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * isbool() eval method Returns whether or not the field value is a boolean
-     * 
+     *
      * @param ctx EvalMethodIsboolContext
      * @return ColumnNode containing the Column for the isbool() eval method
      */
@@ -2154,7 +2151,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * isint() eval method Returns whether or not the field value is an integer
-     * 
+     *
      * @param ctx EvalMethodIsintContext
      * @return ColumnNode containing the Column for the isint() eval method
      */
@@ -2182,7 +2179,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * isnum() eval method Returns whether or not the field value is a numeric
-     * 
+     *
      * @param ctx EvalMethodIsnumContext
      * @return ColumnNode containing the Column for the isnum() eval method
      */
@@ -2210,7 +2207,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * isstr() eval method Returns whether or not the field value is a string
-     * 
+     *
      * @param ctx EvalMethodIsstrContext
      * @return ColumnNode containing the Column for the isstr() eval method
      */
@@ -2238,7 +2235,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * typeof() eval method Returns the type of the field
-     * 
+     *
      * @param ctx EvalMethodTypeofContext
      * @return ColumnNode containing the Column for the typeof() eval method
      */
@@ -2266,7 +2263,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * isnull() eval method Returns whether or not the field value is a null
-     * 
+     *
      * @param ctx EvalMethodIsnullContext
      * @return ColumnNode containing the Column for the isnull() eval method
      */
@@ -2288,7 +2285,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * isnotnull() eval method Returns whether or not the field value is a non-null
-     * 
+     *
      * @param ctx EvalMethodIsnotnullContext
      * @return ColumnNode containing the Column for the isnotnull() eval method
      */
@@ -2310,7 +2307,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * commands() eval method Returns the commands used in given search string
-     * 
+     *
      * @param ctx EvalMethodCommandsContext
      * @return ColumnNode containing the Column for the commands() eval method
      */
@@ -2339,7 +2336,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * mvappend() eval method Returns a multivalue field with all arguments as values
-     * 
+     *
      * @param ctx EvalMethodMvappendContext
      * @return ColumnNode containing the Column for the mvappend() eval method
      */
@@ -2362,24 +2359,13 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
                 listOfFields.add(field);
         }
 
-        // Register and call UDF mvappend
-        UserDefinedFunction mvAppendUDF = functions
-                .udf(new Mvappend(), DataTypes.createArrayType(DataTypes.StringType, false))
-                .asNonNullable();
-        SparkSession ss = SparkSession.builder().getOrCreate();
-        ss.udf().register("mvAppendUDF", mvAppendUDF);
-
-        Column res = functions.callUDF("mvAppendUDF", functions.struct(JavaConversions.asScalaBuffer(listOfFields)));
-
-        //Column res = functions.array(JavaConversions.asScalaBuffer(listOfFields));
-
-        rv = new ColumnNode(res);
+        rv = new ColumnNode(new MultiValueColumn(listOfFields).column());
         return rv;
     }
 
     /**
      * mvcount() eval method Returns the amount of items in the multivalue field
-     * 
+     *
      * @param ctx EvalMethodMvcountContext
      * @return ColumnNode containing the Column for the mvcount() eval method
      */
@@ -2411,7 +2397,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * mvdedup() eval method Returns the given multivalue field with deduplicated values
-     * 
+     *
      * @param ctx EvalMethodMvdedupContext
      * @return ColumnNode containing the column for the mvdedup() eval method
      */
@@ -2442,7 +2428,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
     /**
      * mvfilter() eval method Returns the values in a multivalue field that pass the given regex filter TODO Implement,
      * requires? work on the parser side
-     * 
+     *
      * @param ctx EvalMethodMvfilterContext
      * @return ColumnNode containing Column for the mvfilter() eval method
      */
@@ -2481,7 +2467,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * mvfind() eval method Returns the values that match the given regex in the multivalue field provided
-     * 
+     *
      * @param ctx EvalMethodMvfindContext
      * @return ColumnNode containing the Column for the mvfind() eval method
      */
@@ -2516,7 +2502,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * mvindex() eval method Returns the values of the multivalue field between the given indices
-     * 
+     *
      * @param ctx EvalMethodMvindexContext
      * @return ColumnNode containing Column for the mvindex() eval method
      */
@@ -2562,7 +2548,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * mvjoin() eval method Returns the multivalue field's items concatenated with given delimiter in between each value
-     * 
+     *
      * @param ctx EvalMethodMvjoinContext
      * @return ColumnNode containing Column for the mvjoin() eval method
      */
@@ -2596,7 +2582,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * mvrange() eval method Returns a multivalue field with numbers from start to end with step.
-     * 
+     *
      * @param ctx EvalMethodMvrangeContext
      * @return ColumnNode containing Column for mvrange() eval method
      */
@@ -2628,7 +2614,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * mvsort() eval method Returns the given multivalue field sorted
-     * 
+     *
      * @param ctx EvalMethodMvsortContext
      * @return ColumnNode containing Column for mvsort() eval method
      */
@@ -2650,7 +2636,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * mvzip() eval method Returns the two multivalue field's values "zipped" together, optionally with a delimiter
-     * 
+     *
      * @param ctx EvalMethodMvzipContext
      * @return ColumnNode containing Column for mvzip() eval method
      */
@@ -2689,7 +2675,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * JSONValid() eval method Returns whether or not the given field contains valid json
-     * 
+     *
      * @param ctx EvalMethodJSONValidContext
      * @return ColumnNode containing Column for JSONValid() eval method
      */
@@ -2717,7 +2703,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * spath() eval method Processes the spath/xpath expression and returns the results
-     * 
+     *
      * @param ctx EvalMethodSpathContext
      * @return ColumnNode containing Column for spath() eval method
      */
@@ -2749,7 +2735,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
 
     /**
      * time() eval method Returns the current time in seconds
-     * 
+     *
      * @param ctx EvalMethodTimeContext
      * @return ColumnNode containing Column for time() eval method
      */
