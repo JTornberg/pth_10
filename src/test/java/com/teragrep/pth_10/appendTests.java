@@ -54,7 +54,7 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class appendTests {
 
-    private final String testFile = "src/test/resources/mvappendTest_data*.jsonl";
+    private final String testFile = "src/test/resources/appendTest_data*.jsonl";
     private StreamingTestUtil streamingTestUtil;
 
     @BeforeAll
