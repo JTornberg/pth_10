@@ -45,6 +45,9 @@
  */
 package com.teragrep.pth_10;
 
+import com.teragrep.pth_10.ast.MultiValueColumn;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Row;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
@@ -52,7 +55,7 @@ import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class appendTests {
+public class AppendTest {
 
     private final String testFile = "src/test/resources/appendTest_data*.jsonl";
     private StreamingTestUtil streamingTestUtil;
@@ -235,5 +238,21 @@ public class appendTests {
             List<Object> values = row.getList(row.fieldIndex("a"));
             Assertions.assertEquals("[1]", values.toString());
         });
+    }
+
+    @Test
+    public void testEqualsContract() {
+        EqualsVerifier
+                .forClass(MultiValueColumn.class)
+                .withPrefabValues(Column.class, new Column("a"), new Column("b"))
+                .verify();
+    }
+
+    @Test
+    public void testNotEquals() {
+        MultiValueColumn mvColumn = new MultiValueColumn(new Column("a"));
+        MultiValueColumn other = new MultiValueColumn(new Column("b"));
+
+        Assertions.assertNotEquals(other, mvColumn);
     }
 }
