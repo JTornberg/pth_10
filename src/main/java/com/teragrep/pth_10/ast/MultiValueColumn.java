@@ -51,6 +51,7 @@ import scala.collection.JavaConverters;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public final class MultiValueColumn {
 
@@ -77,5 +78,20 @@ public final class MultiValueColumn {
         return functions
                 .when(functions.coalesce(joinedStr, functions.lit("")).equalTo(""), functions.array())
                 .otherwise(functions.split(joinedStr, delimiter, -1));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        MultiValueColumn appendedColumn = (MultiValueColumn) o;
+        return Objects.equals(columns, appendedColumn.columns);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(columns);
     }
 }
