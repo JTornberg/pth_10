@@ -3554,7 +3554,7 @@ public class evalTest {
             matches = "true"
     )
     //The following are tests for different appending
-    public void appendStrings() {
+    public void testEvalMvappendAppendsTwoStrings() {
         String q = "index=index_A | eval a=mvappend(\"one\", \"two\")";
         String testFile = "src/test/resources/eval_test_data1*.jsonl";
         this.streamingTestUtil.performDPLTest(q, testFile, res -> {
@@ -3562,8 +3562,9 @@ public class evalTest {
 
             Row row = rows.get(0);
             List<Object> values = row.getList(row.fieldIndex("a"));
+            List<Object> expectedList = Arrays.asList("one", "two");
             Assertions.assertEquals(2, values.size());
-            Assertions.assertEquals("[one, two]", values.toString());
+            Assertions.assertEquals(expectedList, values);
         });
     }
 
@@ -3572,7 +3573,7 @@ public class evalTest {
             named = "skipSparkTest",
             matches = "true"
     )
-    public void appendTwoMultivalueColumns() {
+    public void testEvalMvappendAppendsTwoMultivalueFields() {
         String q = "index=index_A | eval mv1=mvappend(\"one\", 2) "
                 + "| eval mv2=mvappend(3, 4) | eval all=mvappend(mv1, mv2)";
         String testFile = "src/test/resources/eval_test_data1*.jsonl";
@@ -3581,7 +3582,8 @@ public class evalTest {
 
             Row row = rows.get(0);
             List<Object> values = row.getList(row.fieldIndex("all"));
-            Assertions.assertEquals("[one, 2, 3, 4]", values.toString());
+            List<Object> expectedList = Arrays.asList("one", "2", "3", "4");
+            Assertions.assertEquals(expectedList, values);
         });
     }
 
@@ -3590,7 +3592,7 @@ public class evalTest {
             named = "skipSparkTest",
             matches = "true"
     )
-    public void appendStringAndNumber() {
+    public void testEvalMvappendAppendsStringAndNumber() {
         String q = "index=index_A | eval a=mvappend(\"one\", 2)";
         String testFile = "src/test/resources/eval_test_data1*.jsonl";
         this.streamingTestUtil.performDPLTest(q, testFile, res -> {
@@ -3598,7 +3600,8 @@ public class evalTest {
 
             Row row = rows.get(0);
             List<Object> values = row.getList(row.fieldIndex("a"));
-            Assertions.assertEquals("[one, 2]", values.toString());
+            List<Object> expectedList = Arrays.asList("one", "2");
+            Assertions.assertEquals(expectedList, values);
         });
     }
 
@@ -3607,17 +3610,16 @@ public class evalTest {
             named = "skipSparkTest",
             matches = "true"
     )
-    public void appendNumbers() {
+    public void testEvalMvappendAppendsNumberAndMultivalueField() {
         String q = "index=index_A | eval a=mvappend(3, 2) | eval b=mvappend(1, a)";
         String testFile = "src/test/resources/eval_test_data1*.jsonl";
         this.streamingTestUtil.performDPLTest(q, testFile, res -> {
-            res.printSchema();
-            res.show(false);
             List<Row> rows = res.collectAsList();
 
             Row row = rows.get(0);
             List<Object> values = row.getList(row.fieldIndex("b"));
-            Assertions.assertEquals("[1, 3, 2]", values.toString());
+            List<Object> expectedList = Arrays.asList("1", "3", "2");
+            Assertions.assertEquals(expectedList, values);
         });
     }
 
@@ -3626,7 +3628,7 @@ public class evalTest {
             named = "skipSparkTest",
             matches = "true"
     )
-    public void appendStringAndMultivalue() {
+    public void testEvalMvappendAppendsMultivalueFieldAndString() {
         String q = "index=index_A | eval mv=mvappend(\"one\", \"two\") | eval a=mvappend(mv, \"three\")";
         String testFile = "src/test/resources/eval_test_data1*.jsonl";
         this.streamingTestUtil.performDPLTest(q, testFile, res -> {
@@ -3634,7 +3636,8 @@ public class evalTest {
 
             Row row = rows.get(0);
             List<Object> values = row.getList(row.fieldIndex("a"));
-            Assertions.assertEquals("[one, two, three]", values.toString());
+            List<Object> expectedList = Arrays.asList("one", "two", "three");
+            Assertions.assertEquals(expectedList, values);
         });
     }
 
@@ -3643,7 +3646,7 @@ public class evalTest {
             named = "skipSparkTest",
             matches = "true"
     )
-    public void appendMultivalueAndNumber() {
+    public void testEvalMvappendAppendsMultivalueFieldAndNumber() {
         String q = "index=index_A | eval mv=mvappend(\"one\", \"two\") | eval a=mvappend(mv, 3)";
         String testFile = "src/test/resources/eval_test_data1*.jsonl";
         this.streamingTestUtil.performDPLTest(q, testFile, res -> {
@@ -3651,7 +3654,8 @@ public class evalTest {
 
             Row row = rows.get(0);
             List<Object> values = row.getList(row.fieldIndex("a"));
-            Assertions.assertEquals("[one, two, 3]", values.toString());
+            List<Object> expectedList = Arrays.asList("one", "two", "3");
+            Assertions.assertEquals(expectedList, values);
         });
     }
 
@@ -3660,7 +3664,7 @@ public class evalTest {
             named = "skipSparkTest",
             matches = "true"
     )
-    public void nullsOnly() {
+    public void testEvalMvappendCorrectlyGivesEmptyMultivalueFieldForNullsOnly() {
         String q = "index=index_A | eval a=mvappend(null(), null())";
         String testFile = "src/test/resources/eval_test_data1*.jsonl";
         this.streamingTestUtil.performDPLTest(q, testFile, res -> {
@@ -3668,7 +3672,7 @@ public class evalTest {
 
             Row row = rows.get(0);
             List<Object> values = row.getList(row.fieldIndex("a"));
-            Assertions.assertEquals("[]", values.toString());
+            Assertions.assertTrue(values.isEmpty());
         });
     }
 
@@ -3677,7 +3681,7 @@ public class evalTest {
             named = "skipSparkTest",
             matches = "true"
     )
-    public void nullInsideAppend() {
+    public void testEvalMvappendCorrectlyDropsNullInsideMvappend() {
         String q = "index=index_A | eval a=mvappend(\"one\", null(), 2)";
         String testFile = "src/test/resources/eval_test_data1*.jsonl";
         this.streamingTestUtil.performDPLTest(q, testFile, res -> {
@@ -3685,7 +3689,8 @@ public class evalTest {
 
             Row row = rows.get(0);
             List<Object> values = row.getList(row.fieldIndex("a"));
-            Assertions.assertEquals("[one, 2]", values.toString());
+            List<Object> expectedList = Arrays.asList("one", "2");
+            Assertions.assertEquals(expectedList, values);
         });
     }
 
@@ -3694,7 +3699,7 @@ public class evalTest {
             named = "skipSparkTest",
             matches = "true"
     )
-    public void nullArgumentIsDropped() {
+    public void testEvalMvappendCorrectlyDropsNull() {
         String q = "index=index_A | eval a=mvappend(1, null())";
         String testFile = "src/test/resources/eval_test_data1*.jsonl";
         this.streamingTestUtil.performDPLTest(q, testFile, res -> {
@@ -3702,7 +3707,8 @@ public class evalTest {
 
             Row row = rows.get(0);
             List<Object> values = row.getList(row.fieldIndex("a"));
-            Assertions.assertEquals("[1]", values.toString());
+            List<Object> expectedList = Arrays.asList("1");
+            Assertions.assertEquals(expectedList, values);
         });
     }
 

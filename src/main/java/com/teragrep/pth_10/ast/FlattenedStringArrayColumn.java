@@ -43,53 +43,53 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.pth_10;
+package com.teragrep.pth_10.ast;
 
-import com.teragrep.pth_10.ast.MultiValueColumn;
-import nl.jqno.equalsverifier.EqualsVerifier;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.functions;
-import org.junit.jupiter.api.*;
 
-public class MultiValueColumnTest {
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
-    @Test
-    public void testColumn() {
-        String delimiter = String.valueOf((char) 1);
-        Column joined = functions.concat_ws(delimiter, new Column("a"), new Column("b"));
-        Column expected = functions
-                .when(functions.coalesce(joined, functions.lit("")).equalTo(""), functions.array())
-                .otherwise(functions.split(joined, delimiter, -1));
-        MultiValueColumn mvColumn = new MultiValueColumn(new Column("a"), new Column("b"));
-        Assertions.assertEquals(expected, mvColumn.column());
+public final class FlattenedStringArrayColumn {
+
+    private final List<Column> columns;
+
+    public FlattenedStringArrayColumn(final Column ... columns) {
+        this(Arrays.asList(columns));
     }
 
-    @Test
-    public void testOneColumn() {
-        MultiValueColumn mvColumn = new MultiValueColumn(new Column("a"));
-        Assertions.assertNotEquals(new Column("a"), mvColumn.column());
+    public FlattenedStringArrayColumn(final List<Column> columns) {
+        this.columns = columns;
     }
 
-    @Test
-    public void testNoColumn() {
-        MultiValueColumn mvColumn = new MultiValueColumn();
-        IllegalStateException ise = Assertions.assertThrows(IllegalStateException.class, mvColumn::column);
-        Assertions.assertEquals("No columns found", ise.getMessage());
+    public Column column() {
+        if (columns.isEmpty()) {
+            throw new IllegalStateException("No columns found");
+        }
+
+        final String delimiter = "\u0001"; //start of heading control character
+
+        final Column joinedStr = functions.concat_ws(delimiter, columns.toArray(new Column[0]));
+
+        return functions
+                .when(functions.coalesce(joinedStr, functions.lit("")).equalTo(""), functions.array())
+                .otherwise(functions.split(joinedStr, delimiter, -1));
     }
 
-    @Test
-    public void testEqualsContract() {
-        EqualsVerifier
-                .forClass(MultiValueColumn.class)
-                .withPrefabValues(Column.class, new Column("a"), new Column("b"))
-                .verify();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        final FlattenedStringArrayColumn appendedColumn = (FlattenedStringArrayColumn) o;
+        return Objects.equals(columns, appendedColumn.columns);
     }
 
-    @Test
-    public void testNotEquals() {
-        MultiValueColumn mvColumn = new MultiValueColumn(new Column("a"));
-        MultiValueColumn other = new MultiValueColumn(new Column("b"));
-
-        Assertions.assertNotEquals(other, mvColumn);
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(columns);
     }
 }

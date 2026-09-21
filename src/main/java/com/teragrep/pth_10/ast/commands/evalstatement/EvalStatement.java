@@ -2359,7 +2359,7 @@ public class EvalStatement extends DPLParserBaseVisitor<Node> {
                 listOfFields.add(field);
         }
 
-        rv = new ColumnNode(new MultiValueColumn(listOfFields).column());
+        rv = new ColumnNode(new FlattenedStringArrayColumn(listOfFields).column());
         return rv;
     }
 

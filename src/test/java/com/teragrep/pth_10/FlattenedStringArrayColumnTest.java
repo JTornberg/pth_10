@@ -43,55 +43,27 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.pth_10.ast;
+package com.teragrep.pth_10;
 
+import com.teragrep.pth_10.ast.FlattenedStringArrayColumn;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.apache.spark.sql.Column;
-import org.apache.spark.sql.functions;
-import scala.collection.JavaConverters;
+import org.junit.jupiter.api.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+public class FlattenedStringArrayColumnTest {
 
-public final class MultiValueColumn {
-
-    private final List<Column> columns;
-
-    public MultiValueColumn(Column ... columns) {
-        this(Arrays.asList(columns));
+    @Test
+    public void testNoColumnsThrowsException() {
+        FlattenedStringArrayColumn mvColumn = new FlattenedStringArrayColumn();
+        IllegalStateException ise = Assertions.assertThrows(IllegalStateException.class, mvColumn::column);
+        Assertions.assertEquals("No columns found", ise.getMessage());
     }
 
-    public MultiValueColumn(List<Column> columns) {
-        this.columns = columns;
-    }
-
-    public Column column() {
-        if (columns.isEmpty()) {
-            throw new IllegalStateException("No columns found");
-        }
-
-        String delimiter = "\u0001"; //comma
-
-        scala.collection.Seq<Column> scalaSeq = JavaConverters.asScalaBuffer(columns).toSeq();
-        Column joinedStr = functions.concat_ws(delimiter, scalaSeq);
-
-        return functions
-                .when(functions.coalesce(joinedStr, functions.lit("")).equalTo(""), functions.array())
-                .otherwise(functions.split(joinedStr, delimiter, -1));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        MultiValueColumn appendedColumn = (MultiValueColumn) o;
-        return Objects.equals(columns, appendedColumn.columns);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(columns);
+    @Test
+    public void testEqualsContract() {
+        EqualsVerifier
+                .forClass(FlattenedStringArrayColumn.class)
+                .withPrefabValues(Column.class, new Column("a"), new Column("b"))
+                .verify();
     }
 }
